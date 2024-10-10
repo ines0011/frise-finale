@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ma Frise Chronologique</title>
+    <link href="https://unpkg.com/vis-timeline@7.4.4/styles/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/vis-timeline@7.4.4/standalone/umd/vis-timeline-graph2d.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <style>
+        #timeline {
+            min-height: 800px;
+            width: 100%;
+            height: 800px;
+            border: 1px solid #d3d3d3;
+            overflow: visible;
+            margin-top: 20px;
+            background-color: #fefaf0;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Suppression du quadrillage */
+        .vis-time-axis .vis-grid.vis-vertical {
+            border-color: transparent;
+        }
+
+        /* Suppression des étiquettes de groupes */
+        .vis-labelset .vis-label {
+            display: none;
+        }
+
+        /* Suppression des lignes de groupes */
+        .vis-group, .vis-line {
+            border: none;
+        }
+
+        .vis-background {
+            border-bottom: none;
+        }
+
+        /* Couleurs spécifiques par type */
+        .type-dirigeant {
+            background-color: #e6b800;
+            border-radius: 5px;
+            padding: 2px 5px;
+        }
+        .type-culture {
+            background-color: #99d6ff;
+            border-radius: 5px;
+            padding: 2px 5px;
+        }
+        .type-scientifique {
+            background-color: #a6e6a6;
+            border-radius: 5px;
+            padding: 2px 5px;
+        }
+        .type-default {
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            padding: 2px 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="timeline"></div>
+    <script>
+        Papa.parse("https://raw.githubusercontent.com/ines0011/frise/refs/heads/main/Official%20TimelineJS3%20Template.csv", {
+            download: true,
+            header: true,
+            complete: function(results) {
+                const eraColors = [
+                    'rgba(255, 204, 128, 0.3)',
+                    'rgba(255, 182, 193, 0.3)',
+                    'rgba(144, 238, 144, 0.3)',
+                    'rgba(173, 216, 230, 0.3)',
+                    'rgba(255, 228, 181, 0.3)'
+                ];
+
+                var items = results.data.map((row, index) => {
+                    let year = parseInt(row['Year']);
+                    let date;
+                    if (year < -1000) {
+                        date = new Date(-10000, 0, 1);
+                        row['Headline'] += ` (approx. ${year})`;
+                    } else if (year < 0) {
+                        date = new Date(-year, 0, 1);
+                        date.setFullYear(-Math.abs(year));
+                    } else {
+                        date = new Date(year, 0, 1);
+                    }
+
+                    let endDate = row['End Year'] ? parseInt(row['End Year']) : null;
+                    let endDateObj = endDate ? new Date(Math.abs(endDate), 0, 1) : null;
+                    if (endDateObj && endDate < -1000) {
+                        endDateObj = new Date(-10000, 0, 1);
+                    } else if (endDateObj && endDate < 0) {
+                        endDateObj.setFullYear(-Math.abs(endDate));
+                    }
+
+                    if (row['Type'] === 'Ere' && endDateObj) {
+                        return {
+                            id: index + 1,
+                            content: `<div style="padding: 5px; color: black; font-weight: bold;">${row['Headline']}</div>`,
+                            start: date,
+                            end: endDateObj,
+                            type: 'background',
+                            style: `background-color: ${eraColors[index % eraColors.length]};`
+                        };
+                    } else {
+                        let typeClass = {
+                            'Dirigeant': 'type-dirigeant',
+                            'Culture': 'type-culture',
+                            'Scientifique': 'type-scientifique'
+                        }[row['Type']] || 'type-default';
+
+                        return {
+                            id: index + 1,
+                            content: row['Headline'],
+                            start: date,
+                            end: endDateObj,
+                            group: row['Type'] || 'default',
+                            className: typeClass
+                        };
+                    }
+                });
+
+                var groups = new vis.DataSet([
+                    { id: 'Ere', content: 'Ere' },
+                    { id: 'Dirigeant', content: 'Dirigeant' },
+                    { id: 'Culture', content: 'Culture' },
+                    { id: 'Scientifique', content: 'Scientifique' },
+                    { id: 'default', content: 'Autre' }
+                ]);
+
+                var options = {
+                    start: new Date(-15000, 0, 1),
+                    end: new Date(3000, 0, 1),
+                    zoomMin: 1000 * 60 * 60 * 24 * 365,
+                    zoomMax: 1000 * 60 * 60 * 24 * 365 * 15000,
+                    width: '100%',
+                    height: '800px',
+                    margin: { item: 5, axis: 50 },
+                    verticalScroll: true,
+                    maxHeight: '100%',
+                    format: {
+                        minorLabels: { year: 'YYYY' },
+                        majorLabels: { year: '' }
+                    }
+                };
+
+                var timeline = new vis.Timeline(document.getElementById('timeline'), items, options);
+                timeline.setGroups(groups);
+
+                timeline.setWindow(new Date(-2000, 0, 1), new Date(1750, 0, 1));
+            }
+        });
+    </script>
+</body>
+</html>
