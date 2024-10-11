@@ -41,26 +41,17 @@
             border-bottom: none;
         }
 
-        /* Couleurs spécifiques par type */
-        .type-dirigeant, .type-culture, .type-scientifique, .type-default {
-            background-color: #e6b800; /* Ajustez cette couleur pour chaque type */
-            border-radius: 20px; /* Coins très arrondis */
-            padding: 10px 15px;
-            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); /* Ombre subtile */
-            color: #333;
-            font-family: 'Cooper', sans-serif;
-        }
-        .type-dirigeant {
+        /* Style personnalisé pour les étiquettes */
+        .custom-label {
             background-color: #e6b800;
-        }
-        .type-culture {
-            background-color: #99d6ff;
-        }
-        .type-scientifique {
-            background-color: #a6e6a6;
-        }
-        .type-default {
-            background-color: #e0e0e0;
+            color: #fff;
+            border-radius: 20px;
+            padding: 10px 15px;
+            font-family: 'Cooper Black', sans-serif;
+            font-size: 14px;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); /* Ombre subtile */
+            text-align: center;
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -110,19 +101,19 @@
                             style: `background-color: ${eraColors[index % eraColors.length]};`
                         };
                     } else {
+                        let content = row['Headline'].split(" ")[0]; // Premier mot seulement
                         let typeClass = {
-                            'Dirigeant': 'type-dirigeant',
-                            'Culture': 'type-culture',
-                            'Scientifique': 'type-scientifique'
-                        }[row['Type']] || 'type-default';
+                            'Dirigeant': 'custom-label',
+                            'Culture': 'custom-label',
+                            'Scientifique': 'custom-label'
+                        }[row['Type']] || 'custom-label';
 
                         return {
                             id: index + 1,
-                            content: row['Headline'],
+                            content: `<div class="${typeClass}" title="${row['Headline']}">${content}</div>`,
                             start: date,
                             end: endDateObj,
                             group: row['Type'] || 'default',
-                            className: typeClass
                         };
                     }
                 });
