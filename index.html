@@ -43,8 +43,6 @@
 
         /* Couleurs spécifiques par type */
         .type-dirigeant,
-        .type-culture,
-        .type-scientifique,
         .type-default {
             background-color: #f4e1d2;
             border: 2px solid #d1a684;
@@ -53,6 +51,18 @@
             font-family: 'Cooper', sans-serif;
             font-weight: bold;
             color: #3b2b1e;
+            text-align: center;
+            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        .type-archi {
+            background-color: #f4b6b6;
+            border: 2px solid #d17373;
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-family: 'Cooper', sans-serif;
+            font-weight: bold;
+            color: #3b1e1e;
             text-align: center;
             box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
@@ -110,8 +120,7 @@
                     } else {
                         let typeClass = {
                             'Dirigeant': 'type-dirigeant',
-                            'Culture': 'type-culture',
-                            'Scientifique': 'type-scientifique'
+                            'Archi': 'type-archi'
                         }[row['Type']] || 'type-default';
 
                         return {
@@ -129,8 +138,7 @@
                 var groups = new vis.DataSet([
                     { id: 'Ere', content: 'Ere' },
                     { id: 'Dirigeant', content: 'Dirigeant' },
-                    { id: 'Culture', content: 'Culture' },
-                    { id: 'Scientifique', content: 'Scientifique' },
+                    { id: 'Archi', content: 'Archi' },
                     { id: 'default', content: 'Autre' }
                 ]);
 
