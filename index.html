@@ -21,6 +21,48 @@
             padding: 0;
             font-family: Arial, sans-serif;
         }
+
+        .vis-time-axis .vis-grid.vis-vertical {
+            border-color: transparent;
+        }
+
+        .vis-labelset .vis-label {
+            display: none;
+        }
+
+        .vis-group, .vis-line {
+            border: none;
+        }
+
+        .vis-background {
+            border-bottom: none;
+        }
+
+        /* Styles spécifiques */
+        .type-dirigeant {
+            z-index: 10;
+            background-color: #e6c200;
+            border-radius: 5px;
+            padding: 2px 5px;
+        }
+        .type-culture {
+            z-index: 5;
+            background-color: #99d6ff;
+            border-radius: 5px;
+            padding: 2px 5px;
+        }
+        .type-scientifique {
+            z-index: 5;
+            background-color: #a6e6a6;
+            border-radius: 5px;
+            padding: 2px 5px;
+        }
+        .type-default {
+            z-index: 1;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            padding: 2px 5px;
+        }
     </style>
 </head>
 <body>
@@ -80,9 +122,8 @@
                             content: row['Headline'],
                             start: date,
                             end: endDateObj,
-                            group: row['Type'] || 'default',
-                            className: typeClass,
-                            subgroup: row['Type'] || `${row['Headline']}`
+                            group: row['Type'] || `event_${index}`,  // Traitement unique pour chaque événement sans type
+                            className: typeClass
                         };
                     }
                 });
@@ -94,9 +135,10 @@
                     { id: 'Scientifique', content: 'Scientifique' },
                 ]);
 
-                items.forEach((item) => {
-                    if (!groups.get(item.group)) {
-                        groups.add({ id: item.group, content: item.group });
+                // Ajouter chaque événement sans type comme un groupe individuel
+                results.data.forEach((row, index) => {
+                    if (!row['Type']) {
+                        groups.add({ id: `event_${index}`, content: row['Headline'] });
                     }
                 });
 
@@ -114,18 +156,11 @@
                         minorLabels: { year: 'YYYY' },
                         majorLabels: { year: '' }
                     },
-                    subgroupStack: { 
-                        'Dirigeant': true,
-                        'Culture': true,
-                        'Scientifique': true,
-                        'default': false  
-                    },
-                    order: (a, b) => a.start - b.start // Arrange based on start date for overlapping
+                    stack: false,  // Pas de chevauchement entre groupes
                 };
 
                 var timeline = new vis.Timeline(document.getElementById('timeline'), items, options);
                 timeline.setGroups(groups);
-
                 timeline.setWindow(new Date(-2000, 0, 1), new Date(1750, 0, 1));
             }
         });
