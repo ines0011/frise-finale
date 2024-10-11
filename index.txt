@@ -41,9 +41,9 @@
             border-bottom: none;
         }
 
-        /* Couleurs spécifiques par type */
+        /* Couleurs spécifiques par groupe de type */
         .type-dirigeant {
-            background-color: #e6b800;
+            background-color: #e6c200;
             border-radius: 5px;
             padding: 2px 5px;
         }
@@ -94,11 +94,6 @@
 
                     let endDate = row['End Year'] ? parseInt(row['End Year']) : null;
                     let endDateObj = endDate ? new Date(Math.abs(endDate), 0, 1) : null;
-                    if (endDateObj && endDate < -1000) {
-                        endDateObj = new Date(-10000, 0, 1);
-                    } else if (endDateObj && endDate < 0) {
-                        endDateObj.setFullYear(-Math.abs(endDate));
-                    }
 
                     if (row['Type'] === 'Ere' && endDateObj) {
                         return {
@@ -121,18 +116,16 @@
                             content: row['Headline'],
                             start: date,
                             end: endDateObj,
-                            group: row['Type'] || 'default',
+                            group: row['Type'] || row['Headline'], // Étiquette unique pour les éléments sans type
                             className: typeClass
                         };
                     }
                 });
 
                 var groups = new vis.DataSet([
-                    { id: 'Ere', content: 'Ere' },
                     { id: 'Dirigeant', content: 'Dirigeant' },
                     { id: 'Culture', content: 'Culture' },
-                    { id: 'Scientifique', content: 'Scientifique' },
-                    { id: 'default', content: 'Autre' }
+                    { id: 'Scientifique', content: 'Scientifique' }
                 ]);
 
                 var options = {
@@ -148,12 +141,12 @@
                     format: {
                         minorLabels: { year: 'YYYY' },
                         majorLabels: { year: '' }
-                    }
+                    },
+                    stack: { 'Dirigeant': false, 'Culture': false, 'Scientifique': false }
                 };
 
                 var timeline = new vis.Timeline(document.getElementById('timeline'), items, options);
                 timeline.setGroups(groups);
-
                 timeline.setWindow(new Date(-2000, 0, 1), new Date(1750, 0, 1));
             }
         });
