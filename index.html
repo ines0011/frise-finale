@@ -22,17 +22,14 @@
             font-family: Arial, sans-serif;
         }
 
-        /* Suppression du quadrillage */
         .vis-time-axis .vis-grid.vis-vertical {
             border-color: transparent;
         }
 
-        /* Suppression des étiquettes de groupes */
         .vis-labelset .vis-label {
             display: none;
         }
 
-        /* Suppression des lignes de groupes */
         .vis-group, .vis-line {
             border: none;
         }
@@ -41,7 +38,7 @@
             border-bottom: none;
         }
 
-        /* Couleurs spécifiques par type */
+        /* Styles spécifiques */
         .type-dirigeant {
             background-color: #e6b800;
             border-radius: 5px;
@@ -121,7 +118,7 @@
                             content: row['Headline'],
                             start: date,
                             end: endDateObj,
-                            group: row['Type'] || 'default',
+                            group: row['Type'] || `default_${index}`,  // chaque événement sans type a un groupe unique
                             className: typeClass
                         };
                     }
@@ -131,9 +128,14 @@
                     { id: 'Ere', content: 'Ere' },
                     { id: 'Dirigeant', content: 'Dirigeant' },
                     { id: 'Culture', content: 'Culture' },
-                    { id: 'Scientifique', content: 'Scientifique' },
-                    { id: 'default', content: 'Autre' }
+                    { id: 'Scientifique', content: 'Scientifique' }
                 ]);
+
+                results.data.forEach((row, index) => {
+                    if (!row['Type']) {
+                        groups.add({ id: `default_${index}`, content: row['Headline'] });
+                    }
+                });
 
                 var options = {
                     start: new Date(-15000, 0, 1),
@@ -148,12 +150,13 @@
                     format: {
                         minorLabels: { year: 'YYYY' },
                         majorLabels: { year: '' }
-                    }
+                    },
+                    groupOrder: 'content', // tri des groupes par contenu
+                    stack: false
                 };
 
                 var timeline = new vis.Timeline(document.getElementById('timeline'), items, options);
                 timeline.setGroups(groups);
-
                 timeline.setWindow(new Date(-2000, 0, 1), new Date(1750, 0, 1));
             }
         });
