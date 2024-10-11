@@ -75,11 +75,28 @@
                 ];
 
                 var items = results.data.map((row, index) => {
-                    let year = parseInt(row['Year']);
-                    let date = new Date(year, 0, 1); // Traite directement les valeurs négatives ou positives
+                    let yearText = row['Year'].trim();
+                    let year = parseInt(yearText);
+                    let date;
+                    if (yearText.startsWith('-')) {
+                        date = new Date(0, 0, 1);
+                        date.setFullYear(year);  // années négatives
+                    } else if (year < 100) {
+                        date = new Date(year, 0, 1);
+                        date.setFullYear(year); // pour éviter l'an 1900 par défaut
+                    } else {
+                        date = new Date(year, 0, 1);
+                    }
 
-                    let endDate = row['End Year'] ? parseInt(row['End Year']) : null;
-                    let endDateObj = endDate ? new Date(endDate, 0, 1) : null;
+                    let endDateText = row['End Year'] ? row['End Year'].trim() : null;
+                    let endDate = endDateText ? parseInt(endDateText) : null;
+                    let endDateObj = endDateText ? new Date(Math.abs(endDate), 0, 1) : null;
+                    if (endDateText && endDateText.startsWith('-')) {
+                        endDateObj = new Date(0, 0, 1);
+                        endDateObj.setFullYear(endDate);
+                    } else if (endDateObj && endDate < 100) {
+                        endDateObj.setFullYear(endDate);
+                    }
 
                     if (row['Type'] === 'Ere' && endDateObj) {
                         return {
@@ -99,12 +116,12 @@
 
                         return {
                             id: index + 1,
-                            content: row['Headline'].split(" ")[0],
+                            content: `${row['Headline'].split(" ")[0]} (${yearText})`, // Affiche le premier mot et la date
                             start: date,
                             end: endDateObj,
                             group: row['Type'] || 'default',
                             className: typeClass,
-                            title: `${row['Headline']} - Date: ${year > 0 ? year : `${Math.abs(year)} avant JC`}` // Date ajoutée
+                            title: `${row['Headline']} (${yearText})` // Affiche l'étiquette entière avec la date au survol
                         };
                     }
                 });
