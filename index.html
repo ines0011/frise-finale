@@ -22,17 +22,14 @@
             font-family: Arial, sans-serif;
         }
 
-        /* Suppression du quadrillage */
         .vis-time-axis .vis-grid.vis-vertical {
             border-color: transparent;
         }
 
-        /* Suppression des étiquettes de groupes */
         .vis-labelset .vis-label {
             display: none;
         }
 
-        /* Suppression des lignes de groupes */
         .vis-group, .vis-line {
             border: none;
         }
@@ -41,7 +38,6 @@
             border-bottom: none;
         }
 
-        /* Couleurs spécifiques par type */
         .type-dirigeant {
             background-color: #e6b800;
             border-radius: 5px;
@@ -100,31 +96,21 @@
                         endDateObj.setFullYear(-Math.abs(endDate));
                     }
 
-                    if (row['Type'] === 'Ere' && endDateObj) {
-                        return {
-                            id: index + 1,
-                            content: `<div style="padding: 5px; color: black; font-weight: bold;">${row['Headline']}</div>`,
-                            start: date,
-                            end: endDateObj,
-                            type: 'background',
-                            style: `background-color: ${eraColors[index % eraColors.length]};`
-                        };
-                    } else {
-                        let typeClass = {
-                            'Dirigeant': 'type-dirigeant',
-                            'Culture': 'type-culture',
-                            'Scientifique': 'type-scientifique'
-                        }[row['Type']] || 'type-default';
+                    let typeClass = {
+                        'Dirigeant': 'type-dirigeant',
+                        'Culture': 'type-culture',
+                        'Scientifique': 'type-scientifique'
+                    }[row['Type']] || 'type-default';
 
-                        return {
-                            id: index + 1,
-                            content: row['Headline'],
-                            start: date,
-                            end: endDateObj,
-                            group: row['Type'] || 'default',
-                            className: typeClass
-                        };
-                    }
+                    return {
+                        id: index + 1,
+                        content: row['Headline'].split(' ')[0], // Affiche seulement le premier mot
+                        fullContent: row['Headline'], // Stocke le texte complet pour l'afficher au clic
+                        start: date,
+                        end: endDateObj,
+                        group: row['Type'] || 'default',
+                        className: typeClass
+                    };
                 });
 
                 var groups = new vis.DataSet([
@@ -154,10 +140,17 @@
                 var timeline = new vis.Timeline(document.getElementById('timeline'), items, options);
                 timeline.setGroups(groups);
 
+                // Gestion des clics pour afficher le contenu complet
+                timeline.on('click', function (properties) {
+                    if (properties.item) {
+                        var item = items.find(i => i.id === properties.item);
+                        alert(item.fullContent); // Affiche le texte complet dans une alerte
+                    }
+                });
+
                 timeline.setWindow(new Date(-2000, 0, 1), new Date(1750, 0, 1));
             }
         });
     </script>
 </body>
 </html>
-
