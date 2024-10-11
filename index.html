@@ -19,17 +19,20 @@
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Georgia', serif;
+            font-family: 'Cooper', Arial, sans-serif;
         }
 
+        /* Suppression du quadrillage */
         .vis-time-axis .vis-grid.vis-vertical {
             border-color: transparent;
         }
 
+        /* Suppression des étiquettes de groupes */
         .vis-labelset .vis-label {
             display: none;
         }
 
+        /* Suppression des lignes de groupes */
         .vis-group, .vis-line {
             border: none;
         }
@@ -39,33 +42,20 @@
         }
 
         /* Couleurs spécifiques par type */
-        .type-dirigeant {
-            background-color: #e6b800;
-            border-radius: 5px;
-            padding: 2px 5px;
-            font-family: 'Georgia', serif;
-            font-weight: bold;
-        }
-        .type-culture {
-            background-color: #99d6ff;
-            border-radius: 5px;
-            padding: 2px 5px;
-            font-family: 'Georgia', serif;
-            font-weight: bold;
-        }
-        .type-scientifique {
-            background-color: #a6e6a6;
-            border-radius: 5px;
-            padding: 2px 5px;
-            font-family: 'Georgia', serif;
-            font-weight: bold;
-        }
+        .type-dirigeant,
+        .type-culture,
+        .type-scientifique,
         .type-default {
-            background-color: #e0e0e0;
-            border-radius: 5px;
-            padding: 2px 5px;
-            font-family: 'Georgia', serif;
+            background-color: #f4e1d2;
+            border: 2px solid #d1a684;
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-family: 'Cooper', sans-serif;
             font-weight: bold;
+            color: #3b2b1e;
+            text-align: center;
+            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
@@ -123,12 +113,12 @@
 
                         return {
                             id: index + 1,
-                            content: row['Headline'].split(' ')[0],
-                            fullContent: row['Headline'],
+                            content: row['Headline'].split(" ")[0], // Affiche le premier mot
                             start: date,
                             end: endDateObj,
                             group: row['Type'] || 'default',
-                            className: typeClass
+                            className: typeClass,
+                            title: row['Headline'] // Affiche l'étiquette entière au survol
                         };
                     }
                 });
@@ -159,13 +149,6 @@
 
                 var timeline = new vis.Timeline(document.getElementById('timeline'), items, options);
                 timeline.setGroups(groups);
-
-                timeline.on('click', function (properties) {
-                    if (properties.item) {
-                        var item = items.find(i => i.id === properties.item);
-                        alert(item.fullContent);
-                    }
-                });
 
                 timeline.setWindow(new Date(-2000, 0, 1), new Date(1750, 0, 1));
             }
