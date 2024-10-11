@@ -40,14 +40,12 @@
 
         /* Styles spécifiques */
         .type-dirigeant {
-            z-index: 10;
             background-color: #e6c200;
             border-radius: 5px;
             padding: 2px 5px;
             opacity: 0.9;
         }
         .type-culture, .type-scientifique, .type-default {
-            z-index: 1;
             border-radius: 5px;
             padding: 2px 5px;
         }
@@ -127,7 +125,7 @@
 
                 var groups = new vis.DataSet([
                     { id: 'Ere', content: 'Ere' },
-                    { id: 'Dirigeant', content: 'Dirigeant' },
+                    { id: 'Dirigeant', content: 'Dirigeant', options: { visible: true } }, // Place "Dirigeant" au bas
                     { id: 'Culture', content: 'Culture' },
                     { id: 'Scientifique', content: 'Scientifique' },
                 ]);
@@ -151,6 +149,10 @@
                     format: {
                         minorLabels: { year: 'YYYY' },
                         majorLabels: { year: '' }
+                    },
+                    groupOrder: function (a, b) {
+                        if (a.content === 'Dirigeant') return 1; // Place Dirigeant en bas
+                        return a.content.localeCompare(b.content); // Autres groupes en haut
                     },
                     stack: false,
                 };
