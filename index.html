@@ -76,24 +76,10 @@
 
                 var items = results.data.map((row, index) => {
                     let year = parseInt(row['Year']);
-                    let date;
-                    if (year < -1000) {
-                        date = new Date(-10000, 0, 1);
-                        row['Headline'] += ` (approx. ${year})`;
-                    } else if (year < 0) {
-                        date = new Date(-year, 0, 1);
-                        date.setFullYear(-Math.abs(year));
-                    } else {
-                        date = new Date(year, 0, 1);
-                    }
+                    let date = new Date(year, 0, 1); // Traite directement les valeurs négatives ou positives
 
                     let endDate = row['End Year'] ? parseInt(row['End Year']) : null;
-                    let endDateObj = endDate ? new Date(Math.abs(endDate), 0, 1) : null;
-                    if (endDateObj && endDate < -1000) {
-                        endDateObj = new Date(-10000, 0, 1);
-                    } else if (endDateObj && endDate < 0) {
-                        endDateObj.setFullYear(-Math.abs(endDate));
-                    }
+                    let endDateObj = endDate ? new Date(endDate, 0, 1) : null;
 
                     if (row['Type'] === 'Ere' && endDateObj) {
                         return {
@@ -113,12 +99,12 @@
 
                         return {
                             id: index + 1,
-                            content: row['Headline'].split(" ")[0], // Affiche le premier mot
+                            content: row['Headline'].split(" ")[0],
                             start: date,
                             end: endDateObj,
                             group: row['Type'] || 'default',
                             className: typeClass,
-                            title: `${row['Headline']} - Date: ${year > 0 ? year : `${year}`}` // Affiche l'étiquette entière avec la date au survol
+                            title: `${row['Headline']} - Date: ${year > 0 ? year : `${Math.abs(year)} avant JC`}` // Date ajoutée
                         };
                     }
                 });
