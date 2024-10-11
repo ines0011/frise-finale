@@ -22,14 +22,17 @@
             font-family: Arial, sans-serif;
         }
 
+        /* Suppression du quadrillage */
         .vis-time-axis .vis-grid.vis-vertical {
             border-color: transparent;
         }
 
+        /* Suppression des étiquettes de groupes */
         .vis-labelset .vis-label {
             display: none;
         }
 
+        /* Suppression des lignes de groupes */
         .vis-group, .vis-line {
             border: none;
         }
@@ -38,7 +41,7 @@
             border-bottom: none;
         }
 
-        /* Styles spécifiques */
+        /* Couleurs spécifiques par type */
         .type-dirigeant {
             background-color: #e6b800;
             border-radius: 5px;
@@ -81,7 +84,7 @@
                     let date;
                     if (year < -1000) {
                         date = new Date(-10000, 0, 1);
-                        row['Headline'] += ` (approx. ${year})`;
+                        row['Headline'] +=  (approx. ${year});
                     } else if (year < 0) {
                         date = new Date(-year, 0, 1);
                         date.setFullYear(-Math.abs(year));
@@ -100,11 +103,11 @@
                     if (row['Type'] === 'Ere' && endDateObj) {
                         return {
                             id: index + 1,
-                            content: `<div style="padding: 5px; color: black; font-weight: bold;">${row['Headline']}</div>`,
+                            content: <div style="padding: 5px; color: black; font-weight: bold;">${row['Headline']}</div>,
                             start: date,
                             end: endDateObj,
                             type: 'background',
-                            style: `background-color: ${eraColors[index % eraColors.length]};`
+                            style: background-color: ${eraColors[index % eraColors.length]};
                         };
                     } else {
                         let typeClass = {
@@ -118,7 +121,7 @@
                             content: row['Headline'],
                             start: date,
                             end: endDateObj,
-                            group: row['Type'] || `default_${index}`,  // chaque événement sans type a un groupe unique
+                            group: row['Type'] || 'default',
                             className: typeClass
                         };
                     }
@@ -128,14 +131,9 @@
                     { id: 'Ere', content: 'Ere' },
                     { id: 'Dirigeant', content: 'Dirigeant' },
                     { id: 'Culture', content: 'Culture' },
-                    { id: 'Scientifique', content: 'Scientifique' }
+                    { id: 'Scientifique', content: 'Scientifique' },
+                    { id: 'default', content: 'Autre' }
                 ]);
-
-                results.data.forEach((row, index) => {
-                    if (!row['Type']) {
-                        groups.add({ id: `default_${index}`, content: row['Headline'] });
-                    }
-                });
 
                 var options = {
                     start: new Date(-15000, 0, 1),
@@ -150,13 +148,12 @@
                     format: {
                         minorLabels: { year: 'YYYY' },
                         majorLabels: { year: '' }
-                    },
-                    groupOrder: 'content', // tri des groupes par contenu
-                    stack: false
+                    }
                 };
 
                 var timeline = new vis.Timeline(document.getElementById('timeline'), items, options);
                 timeline.setGroups(groups);
+
                 timeline.setWindow(new Date(-2000, 0, 1), new Date(1750, 0, 1));
             }
         });
