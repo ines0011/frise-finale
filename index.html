@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -21,42 +21,46 @@
             padding: 0;
             font-family: Arial, sans-serif;
         }
-
+ 
+        /* Suppression du quadrillage */
         .vis-time-axis .vis-grid.vis-vertical {
             border-color: transparent;
         }
-
+ 
+        /* Suppression des étiquettes de groupes */
         .vis-labelset .vis-label {
             display: none;
         }
-
+ 
+        /* Suppression des lignes de groupes */
         .vis-group, .vis-line {
             border: none;
         }
-
+ 
         .vis-background {
             border-bottom: none;
         }
-
-        /* Styles spécifiques */
+ 
+        /* Couleurs spécifiques par type */
         .type-dirigeant {
             background-color: #e6c200;
-            border-radius: 5px;
-            padding: 2px 5px;
-            opacity: 0.9;
-        }
-        .type-culture, .type-scientifique, .type-default {
             border-radius: 5px;
             padding: 2px 5px;
         }
         .type-culture {
             background-color: #99d6ff;
+            border-radius: 5px;
+            padding: 2px 5px;
         }
         .type-scientifique {
             background-color: #a6e6a6;
+            border-radius: 5px;
+            padding: 2px 5px;
         }
         .type-default {
             background-color: #e0e0e0;
+            border-radius: 5px;
+            padding: 2px 5px;
         }
     </style>
 </head>
@@ -74,7 +78,7 @@
                     'rgba(173, 216, 230, 0.3)',
                     'rgba(255, 228, 181, 0.3)'
                 ];
-
+ 
                 var items = results.data.map((row, index) => {
                     let year = parseInt(row['Year']);
                     let date;
@@ -87,7 +91,7 @@
                     } else {
                         date = new Date(year, 0, 1);
                     }
-
+ 
                     let endDate = row['End Year'] ? parseInt(row['End Year']) : null;
                     let endDateObj = endDate ? new Date(Math.abs(endDate), 0, 1) : null;
                     if (endDateObj && endDate < -1000) {
@@ -95,7 +99,7 @@
                     } else if (endDateObj && endDate < 0) {
                         endDateObj.setFullYear(-Math.abs(endDate));
                     }
-
+ 
                     if (row['Type'] === 'Ere' && endDateObj) {
                         return {
                             id: index + 1,
@@ -111,31 +115,26 @@
                             'Culture': 'type-culture',
                             'Scientifique': 'type-scientifique'
                         }[row['Type']] || 'type-default';
-
+ 
                         return {
                             id: index + 1,
                             content: row['Headline'],
                             start: date,
                             end: endDateObj,
-                            group: row['Type'] || `event_${index}`,
+                            group: row['Type'] || 'default',
                             className: typeClass
                         };
                     }
                 });
-
+ 
                 var groups = new vis.DataSet([
                     { id: 'Ere', content: 'Ere' },
-                    { id: 'Dirigeant', content: 'Dirigeant', options: { visible: true } }, // Place "Dirigeant" au bas
+                    { id: 'Dirigeant', content: 'Dirigeant' },
                     { id: 'Culture', content: 'Culture' },
                     { id: 'Scientifique', content: 'Scientifique' },
+                    { id: 'default', content: 'Autre' }
                 ]);
-
-                results.data.forEach((row, index) => {
-                    if (!row['Type']) {
-                        groups.add({ id: `event_${index}`, content: row['Headline'] });
-                    }
-                });
-
+ 
                 var options = {
                     start: new Date(-15000, 0, 1),
                     end: new Date(3000, 0, 1),
@@ -149,16 +148,12 @@
                     format: {
                         minorLabels: { year: 'YYYY' },
                         majorLabels: { year: '' }
-                    },
-                    groupOrder: function (a, b) {
-                        if (a.content === 'Dirigeant') return 1; // Place Dirigeant en bas
-                        return a.content.localeCompare(b.content); // Autres groupes en haut
-                    },
-                    stack: false,
+                    }
                 };
-
+ 
                 var timeline = new vis.Timeline(document.getElementById('timeline'), items, options);
                 timeline.setGroups(groups);
+ 
                 timeline.setWindow(new Date(-2000, 0, 1), new Date(1750, 0, 1));
             }
         });
