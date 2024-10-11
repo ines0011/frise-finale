@@ -19,7 +19,7 @@
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Cooper', Arial, sans-serif;
+            font-family: Arial, sans-serif;
         }
 
         /* Suppression du quadrillage */
@@ -41,21 +41,26 @@
             border-bottom: none;
         }
 
-        /* Couleurs spécifiques par type avec plus d'arrondi */
-        .type-dirigeant,
-        .type-culture,
-        .type-scientifique,
-        .type-default {
-            background-color: #f4e1d2;
-            border: 2px solid #d1a684;
-            border-radius: 60px;
+        /* Couleurs spécifiques par type */
+        .type-dirigeant, .type-culture, .type-scientifique, .type-default {
+            background-color: #e6b800; /* Ajustez cette couleur pour chaque type */
+            border-radius: 20px; /* Coins très arrondis */
             padding: 10px 15px;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); /* Ombre subtile */
+            color: #333;
             font-family: 'Cooper', sans-serif;
-            font-weight: bold;
-            color: #3b2b1e;
-            text-align: center;
-            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        .type-dirigeant {
+            background-color: #e6b800;
+        }
+        .type-culture {
+            background-color: #99d6ff;
+        }
+        .type-scientifique {
+            background-color: #a6e6a6;
+        }
+        .type-default {
+            background-color: #e0e0e0;
         }
     </style>
 </head>
@@ -113,12 +118,11 @@
 
                         return {
                             id: index + 1,
-                            content: row['Headline'].split(" ")[0], // Affiche le premier mot
+                            content: row['Headline'],
                             start: date,
                             end: endDateObj,
                             group: row['Type'] || 'default',
-                            className: typeClass,
-                            title: row['Headline'] // Affiche l'étiquette entière au survol
+                            className: typeClass
                         };
                     }
                 });
