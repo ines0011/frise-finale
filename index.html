@@ -80,23 +80,23 @@
                             content: row['Headline'],
                             start: date,
                             end: endDateObj,
-                            group: row['Type'] || `${row['Headline']}`, // Groupes individuels pour événements sans type
-                            className: typeClass
+                            group: row['Type'] || 'default',
+                            className: typeClass,
+                            subgroup: row['Type'] || `${row['Headline']}`
                         };
                     }
                 });
 
                 var groups = new vis.DataSet([
-                    { id: 'Ere', content: 'Ere', options: { stack: false } },
-                    { id: 'Dirigeant', content: 'Dirigeant', options: { stack: false } },
-                    { id: 'Culture', content: 'Culture', options: { stack: false } },
-                    { id: 'Scientifique', content: 'Scientifique', options: { stack: false } },
+                    { id: 'Ere', content: 'Ere' },
+                    { id: 'Dirigeant', content: 'Dirigeant' },
+                    { id: 'Culture', content: 'Culture' },
+                    { id: 'Scientifique', content: 'Scientifique' },
                 ]);
 
-                // Ajout des groupes sans type, chaque événement sans type est son propre groupe.
                 items.forEach((item) => {
                     if (!groups.get(item.group)) {
-                        groups.add({ id: item.group, content: item.group, options: { stack: true } });
+                        groups.add({ id: item.group, content: item.group });
                     }
                 });
 
@@ -113,7 +113,14 @@
                     format: {
                         minorLabels: { year: 'YYYY' },
                         majorLabels: { year: '' }
-                    }
+                    },
+                    subgroupStack: { 
+                        'Dirigeant': true,
+                        'Culture': true,
+                        'Scientifique': true,
+                        'default': false  
+                    },
+                    order: (a, b) => a.start - b.start // Arrange based on start date for overlapping
                 };
 
                 var timeline = new vis.Timeline(document.getElementById('timeline'), items, options);
