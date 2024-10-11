@@ -48,7 +48,7 @@
         .type-default {
             background-color: #f4e1d2;
             border: 2px solid #d1a684;
-            border-radius: 200px; /* Plus de courbure */
+            border-radius: 10px;
             padding: 10px 15px;
             font-family: 'Cooper', sans-serif;
             font-weight: bold;
@@ -118,7 +118,7 @@
                             end: endDateObj,
                             group: row['Type'] || 'default',
                             className: typeClass,
-                            title: row['Headline'] // Affiche l'étiquette entière au survol
+                            title: `${row['Headline']} - Date: ${year > 0 ? year : `${Math.abs(year)}`}` // Affiche l'étiquette entière avec la date au survol
                         };
                     }
                 });
