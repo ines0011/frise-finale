@@ -19,7 +19,7 @@
         body {
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Cooper', Arial, sans-serif;
         }
 
         /* Suppression du quadrillage */
@@ -41,17 +41,21 @@
             border-bottom: none;
         }
 
-        /* Style personnalisé pour les étiquettes */
-        .custom-label {
-            background-color: #e6b800;
-            color: #fff;
-            border-radius: 20px;
+        /* Couleurs spécifiques par type */
+        .type-dirigeant,
+        .type-culture,
+        .type-scientifique,
+        .type-default {
+            background-color: #f4e1d2;
+            border: 2px solid #d1a684;
+            border-radius: 20px; /* Plus de courbure */
             padding: 10px 15px;
-            font-family: 'Cooper Black', sans-serif;
-            font-size: 14px;
-            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); /* Ombre subtile */
+            font-family: 'Cooper', sans-serif;
+            font-weight: bold;
+            color: #3b2b1e;
             text-align: center;
-            line-height: 1.5;
+            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
@@ -101,19 +105,20 @@
                             style: `background-color: ${eraColors[index % eraColors.length]};`
                         };
                     } else {
-                        let content = row['Headline'].split(" ")[0]; // Premier mot seulement
                         let typeClass = {
-                            'Dirigeant': 'custom-label',
-                            'Culture': 'custom-label',
-                            'Scientifique': 'custom-label'
-                        }[row['Type']] || 'custom-label';
+                            'Dirigeant': 'type-dirigeant',
+                            'Culture': 'type-culture',
+                            'Scientifique': 'type-scientifique'
+                        }[row['Type']] || 'type-default';
 
                         return {
                             id: index + 1,
-                            content: `<div class="${typeClass}" title="${row['Headline']}">${content}</div>`,
+                            content: row['Headline'].split(" ")[0], // Affiche le premier mot
                             start: date,
                             end: endDateObj,
                             group: row['Type'] || 'default',
+                            className: typeClass,
+                            title: row['Headline'] // Affiche l'étiquette entière au survol
                         };
                     }
                 });
