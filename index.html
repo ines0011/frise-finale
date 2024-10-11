@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Ma Frise Chronologique</title>
     <link href="https://unpkg.com/vis-timeline@7.4.4/styles/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/vis-timeline@7.4.4/standalone/umd/vis-timeline-graph2d.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
@@ -19,7 +20,7 @@
         body {
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
         }
 
         .vis-time-axis .vis-grid.vis-vertical {
@@ -38,25 +39,30 @@
             border-bottom: none;
         }
 
+        /* Couleurs spécifiques par type */
         .type-dirigeant {
             background-color: #e6b800;
             border-radius: 5px;
             padding: 2px 5px;
+            font-family: 'Lora', serif;
         }
         .type-culture {
             background-color: #99d6ff;
             border-radius: 5px;
             padding: 2px 5px;
+            font-family: 'Lora', serif;
         }
         .type-scientifique {
             background-color: #a6e6a6;
             border-radius: 5px;
             padding: 2px 5px;
+            font-family: 'Lora', serif;
         }
         .type-default {
             background-color: #e0e0e0;
             border-radius: 5px;
             padding: 2px 5px;
+            font-family: 'Lora', serif;
         }
     </style>
 </head>
@@ -114,7 +120,7 @@
 
                         return {
                             id: index + 1,
-                            content: row['Headline'].split(' ')[0], // Affiche uniquement le premier mot sauf pour 'Ere'
+                            content: row['Headline'].split(' ')[0],
                             fullContent: row['Headline'],
                             start: date,
                             end: endDateObj,
@@ -151,11 +157,10 @@
                 var timeline = new vis.Timeline(document.getElementById('timeline'), items, options);
                 timeline.setGroups(groups);
 
-                // Gestion des clics pour afficher le contenu complet
                 timeline.on('click', function (properties) {
                     if (properties.item) {
                         var item = items.find(i => i.id === properties.item);
-                        alert(item.fullContent); // Affiche le texte complet dans une alerte
+                        alert(item.fullContent);
                     }
                 });
 
