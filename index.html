@@ -125,7 +125,7 @@
 
                         return {
                             id: index + 1,
-                            content: `${row['Headline'].split(" ")[0]} (${yearText})`, // Affiche le premier mot et la date
+                            content: `${row['Headline']}`, // Affiche l'évènement
                             start: date,
                             end: endDateObj,
                             group: row['Type'] || 'default',
