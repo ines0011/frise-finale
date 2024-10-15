@@ -8,12 +8,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
         #timeline {
-            position: sticky;
-            width: 100%;
-            height: 840px;
-            overflow-y: hidden; 
-            overflow-x: auto;
-            background-color: #fefaf0;
+    position: sticky;
+    width: 100%;
+    height: 840px;
+    overflow-y: hidden; /* Cache le défilement vertical */
+    overflow-x: auto; /* Permet un défilement horizontal pour les dates */
+    background-color: #fefaf0;
         }
         body {
             margin: 0;
@@ -21,24 +21,32 @@
             font-family: 'Cooper', Arial, sans-serif;
         }
 
+        /* Suppression du quadrillage */
         .vis-time-axis .vis-grid.vis-vertical {
             border-color: transparent;
         }
+
+        /* Suppression des étiquettes de groupes */
         .vis-labelset .vis-label {
             display: none;
         }
+
+        /* Suppression des lignes de groupes */
         .vis-group, .vis-line {
             border: none;
         }
+
         .vis-background {
             border-bottom: none;
         }
 
-        .type-dirigeant, .type-default, .type-archi {
+        /* Couleurs spécifiques par type */
+        .type-dirigeant,
+        .type-default {
             background-color: #f4e1d2;
             border: 2px solid #d1a684;
             border-radius: 10px;
-            padding: 2px 5px;
+            padding: 0px 0px;
             font-family: 'Cooper', sans-serif;
             font-weight: bold;
             color: #3b2b1e;
@@ -46,7 +54,21 @@
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
             font-size: 10px;
-            transition: font-size 0.3s ease;
+transition: font-size 0.3s ease; /* Transition pour lisser le changement de taille */
+        }
+        .type-archi {
+            background-color: #f4b6b6;
+            border: 2px solid #d17373;
+            border-radius: 10px;
+            padding: 0px 0px;
+            font-family: 'Cooper', sans-serif;
+            font-weight: bold;
+            color: #3b1e1e;
+            text-align: center;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            font-size: 10px;
+transition: font-size 0.3s ease; /* Transition pour lisser le changement de taille */
         }
     </style>
 </head>
@@ -58,22 +80,27 @@
             header: true,
             complete: function(results) {
                 const eraColors = [
-                    'rgba(139, 69, 19, 0.3)',
-                    'rgba(160, 82, 45, 0.3)',
-                    'rgba(205, 133, 63, 0.3)',
-                    'rgba(222, 184, 135, 0.3)',
-                    'rgba(245, 222, 179, 0.3)'
+                    'rgba(139, 69, 19, 0.3)',    // SaddleBrown
+                    'rgba(160, 82, 45, 0.3)',    // Sienna
+                    'rgba(205, 133, 63, 0.3)',   // Peru
+                    'rgba(222, 184, 135, 0.3)',  // BurlyWood
+                    'rgba(245, 222, 179, 0.3)'   // Wheat
                 ];
 
                 var items = results.data.map((row, index) => {
                     let yearText = row['Year'].trim();
                     let year = parseInt(yearText);
-                    let date = new Date(year, 0, 1);
+                    let date;
                     if (yearText.startsWith('-')) {
-                        date.setFullYear(year);
+                        date = new Date(0, 0, 1);
+                        date.setFullYear(year);  // années négatives
                     } else if (year < 100) {
-                        date.setFullYear(year);
+                        date = new Date(year, 0, 1);
+                        date.setFullYear(year); // pour éviter l'an 1900 par défaut
+                    } else {
+                        date = new Date(year, 0, 1);
                     }
+
                     let endDateText = row['End Year'] ? row['End Year'].trim() : null;
                     let endDate = endDateText ? parseInt(endDateText) : null;
                     let endDateObj = endDateText ? new Date(Math.abs(endDate), 0, 1) : null;
@@ -101,12 +128,12 @@
 
                         return {
                             id: index + 1,
-                            content: `${row['Headline']}`, 
+                            content: `${row['Headline']}`, // Affiche l'évènement
                             start: date,
                             end: endDateObj,
                             group: row['Type'] || 'default',
                             className: typeClass,
-                            title: `${row['Text']} (${yearText})`
+                            title: `${row['Text']} (${yearText})` // Affiche l'étiquette entière avec la date au survol
                         };
                     }
                 });
@@ -131,15 +158,20 @@
                     format: {
                         minorLabels: { year: 'YYYY' },
                         majorLabels: { year: '' }
-                    }
+                    },
+    cluster: {
+        enabled: true, // Active le clustering
+        clusterCriteria: function(first, second) {
+            return (second.start - first.start) < (10 * 365 * 24 * 60 * 60 * 1000); // Grouper si proches (10 ans)
+        },
+        clusterByZoomLevel: true, // Adapte selon le niveau de zoom
+    }
                 };
 
                 var timeline = new vis.Timeline(document.getElementById('timeline'), items, options);
                 timeline.setGroups(groups);
 
-                timeline.setWindow(new Date(-1500, 0, 1), new Date(1750, 0, 1));
-
-                // Écoute le changement de zoom et ajuste la taille des étiquettes
+                timeline.setWindow(new Date(-1500, 0, 1), new Date(1750, 0, 1));// Écoute le changement de zoom et ajuste la taille des étiquettes
                 timeline.on('rangechanged', function (properties) {
                     const currentRange = properties.end - properties.start;
                     let fontSize = '10px';
