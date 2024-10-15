@@ -70,15 +70,7 @@
     </style>
 </head>
 <body>
-    <!-- Ajoute des cases à cocher pour filtrer par type -->
-    <div>
-        <label><input type="checkbox" id="toggle-dirigeant" checked> Dirigeant</label>
-        <label><input type="checkbox" id="toggle-archi" checked> Archi</label>
-        <label><input type="checkbox" id="toggle-default" checked> Autre</label>
-    </div>
-
     <div id="timeline"></div>
-
     <script>
         Papa.parse("https://raw.githubusercontent.com/ines0011/frise/refs/heads/main/Official%20TimelineJS3%20Template.csv", {
             download: true,
@@ -119,11 +111,11 @@
                     if (row['Type'] === 'Ere' && endDateObj) {
                         return {
                             id: index + 1,
-                            content: `<div style="padding: 5px; color: black; font-weight: bold;">${row['Headline']}</div>`,
+                            content: <div style="padding: 5px; color: black; font-weight: bold;">${row['Headline']}</div>,
                             start: date,
                             end: endDateObj,
                             type: 'background',
-                            style: `background-color: ${eraColors[index % eraColors.length]};`
+                            style: background-color: ${eraColors[index % eraColors.length]};
                         };
                     } else {
                         let typeClass = {
@@ -133,12 +125,12 @@
 
                         return {
                             id: index + 1,
-                            content: `${row['Headline']}`, // Affiche l'évènement
+                            content: ${row['Headline']}, // Affiche l'évènement
                             start: date,
                             end: endDateObj,
                             group: row['Type'] || 'default',
                             className: typeClass,
-                            title: `${row['Text']} (${yearText})` // Affiche l'étiquette entière avec la date au survol
+                            title: ${row['Text']} (${yearText}) // Affiche l'étiquette entière avec la date au survol
                         };
                     }
                 });
@@ -168,20 +160,6 @@
 
                 var timeline = new vis.Timeline(document.getElementById('timeline'), items, options);
                 timeline.setGroups(groups);
-
-                // Mise à jour de la visibilité des éléments selon les cases cochées
-                function toggleVisibility() {
-                    items.forEach((item) => {
-                        if (item.group === 'Dirigeant') item.visible = document.getElementById('toggle-dirigeant').checked;
-                        else if (item.group === 'Archi') item.visible = document.getElementById('toggle-archi').checked;
-                        else if (item.group === 'default') item.visible = document.getElementById('toggle-default').checked;
-                    });
-                    timeline.setItems(new vis.DataSet(items));
-                }
-
-                document.getElementById('toggle-dirigeant').addEventListener('change', toggleVisibility);
-                document.getElementById('toggle-archi').addEventListener('change', toggleVisibility);
-                document.getElementById('toggle-default').addEventListener('change', toggleVisibility);
 
                 timeline.setWindow(new Date(-2000, 0, 1), new Date(1750, 0, 1));
             }
