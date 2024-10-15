@@ -27,6 +27,7 @@
         .type-dirigeant,
         .type-default {
             background-color: #f4e1d2;
+            border: 2px solid #d1a684; /* Bordure pour type-dirigeant et type-default */
             border-radius: 10px;
             padding: 0px;
             font-family: 'Cooper', sans-serif;
@@ -40,6 +41,7 @@
         }
         .type-archi {
             background-color: #f4b6b6;
+            border: 2px solid #d17373; /* Bordure pour type-archi */
             border-radius: 10px;
             padding: 0px;
             font-family: 'Cooper', sans-serif;
@@ -97,7 +99,7 @@
                         'Archi': 'type-archi'
                     }[row['Type']] || 'type-default';
 
-                    let borderStyle = endDateObj ? 'none' : '2px solid #d1a684';
+                    let borderStyle = endDateObj ? 'none' : (typeClass === 'type-dirigeant' ? '2px solid #d1a684' : '2px solid #d17373');
 
                     if (row['Type'] === 'Ere' && endDateObj) {
                         return {
