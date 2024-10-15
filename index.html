@@ -156,14 +156,7 @@
                     format: {
                         minorLabels: { year: 'YYYY' },
                         majorLabels: { year: '' }
-                    },
-    visibleFrameTemplate: function (item, group, time) {
-        var range = timeline.getWindow();
-        var rangeInterval = range.end - range.start;
-
-        // Cache les étiquettes si la plage d'affichage dépasse 50 ans
-        return rangeInterval < 500 * 365 * 24 * 60 * 60 * 1000;
-    }
+                    }
                 };
 
                 var timeline = new vis.Timeline(document.getElementById('timeline'), items, options);
