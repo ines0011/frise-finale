@@ -171,18 +171,7 @@ transition: font-size 0.3s ease; /* Transition pour lisser le changement de tail
                 var timeline = new vis.Timeline(document.getElementById('timeline'), items, options);
                 timeline.setGroups(groups);
 
-                timeline.setWindow(new Date(-1500, 0, 1), new Date(1750, 0, 1));// Écoute le changement de zoom et ajuste la taille des étiquettes
-                timeline.on('rangechanged', function (properties) {
-                    const currentRange = properties.end - properties.start;
-                    let fontSize = '10px';
-                    if (currentRange > 500 * 365 * 24 * 60 * 60 * 1000) {
-                        fontSize = '5px';
-                    } else if (currentRange < 50 * 365 * 24 * 60 * 60 * 1000) {
-                        fontSize = '12px';
-                    }
-                    document.querySelectorAll('.vis-item .content').forEach(item => {
-                        item.style.fontSize = fontSize;
-                    });
+                timeline.setWindow(new Date(-1500, 0, 1), new Date(1750, 0, 1));
                 });
             }
         });
