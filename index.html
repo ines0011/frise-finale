@@ -47,25 +47,27 @@
             background-color: #f4e1d2;
             border: 2px solid #d1a684;
             border-radius: 10px;
-            padding: 10px 15px;
+            padding: 5px 10px;
             font-family: 'Cooper', sans-serif;
             font-weight: bold;
             color: #3b2b1e;
             text-align: center;
-            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            font-size: 12px;
         }
         .type-archi {
             background-color: #f4b6b6;
             border: 2px solid #d17373;
-            border-radius: 50px;
-            padding: 10px 15px;
+            border-radius: 10px;
+            padding: 5px 10px;
             font-family: 'Cooper', sans-serif;
             font-weight: bold;
             color: #3b1e1e;
             text-align: center;
-            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            font-size: 12px;
         }
     </style>
 </head>
@@ -111,11 +113,11 @@
                     if (row['Type'] === 'Ere' && endDateObj) {
                         return {
                             id: index + 1,
-                            content: <div style="padding: 5px; color: black; font-weight: bold;">${row['Headline']}</div>,
+                            content: `<div style="padding: 5px; color: black; font-weight: bold;">${row['Headline']}</div>`,
                             start: date,
                             end: endDateObj,
                             type: 'background',
-                            style: background-color: ${eraColors[index % eraColors.length]};
+                            style: `background-color: ${eraColors[index % eraColors.length]};`
                         };
                     } else {
                         let typeClass = {
@@ -125,12 +127,12 @@
 
                         return {
                             id: index + 1,
-                            content: ${row['Headline']}, // Affiche l'évènement
+                            content: `${row['Headline']}`, // Affiche l'évènement
                             start: date,
                             end: endDateObj,
                             group: row['Type'] || 'default',
                             className: typeClass,
-                            title: ${row['Text']} (${yearText}) // Affiche l'étiquette entière avec la date au survol
+                            title: `${row['Text']} (${yearText})` // Affiche l'étiquette entière avec la date au survol
                         };
                     }
                 });
