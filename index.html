@@ -24,7 +24,6 @@
         .vis-labelset .vis-label { display: none; }
         .vis-group, .vis-line { border: none; }
         .vis-background { border-bottom: none; }
-
         .type-dirigeant,
         .type-default {
             background-color: #f4e1d2;
@@ -125,12 +124,14 @@
                 var groups = new vis.DataSet([
                     { id: 'Dirigeant', content: 'Dirigeant' },
                     { id: 'Archi', content: 'Archi' },
-                    { id: 'default', content: 'Autre' }
-                    { id: 'Ere', content: 'Ere' },
+                    { id: 'default', content: 'Autre' },
+                    { id: 'Ere', content: 'Ere' }
                 ]);
 
                 var options = {
-                    groupOrder: 'order',
+                    groupOrder: function (a, b) {
+                        return a.id === 'Ere' ? 1 : -1;
+                    },
                     start: new Date(-15000, 0, 1),
                     end: new Date(3000, 0, 1),
                     zoomMin: 1000 * 60 * 60 * 24 * 365,
@@ -151,7 +152,6 @@
 
                 timeline.setWindow(new Date(-1500, 0, 1), new Date(1750, 0, 1));
 
-                // Ajout d'un écouteur pour ajuster la taille des étiquettes au zoom
                 timeline.on('rangechange', function (properties) {
                     const currentRange = properties.end - properties.start;
                     items.forEach((item) => {
