@@ -156,7 +156,14 @@
                     format: {
                         minorLabels: { year: 'YYYY' },
                         majorLabels: { year: '' }
-                    }
+                    },
+    cluster: {
+        enabled: true, // Active le clustering
+        clusterCriteria: function(first, second) {
+            return (second.start - first.start) < (10 * 365 * 24 * 60 * 60 * 1000); // Grouper si proches (10 ans)
+        },
+        clusterByZoomLevel: true, // Adapte selon le niveau de zoom
+    }
                 };
 
                 var timeline = new vis.Timeline(document.getElementById('timeline'), items, options);
