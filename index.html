@@ -10,7 +10,7 @@
         #timeline {
     position: sticky;
     width: 100%;
-    height: 800px;
+    height: 820px;
     overflow-y: hidden; /* Cache le défilement vertical */
     overflow-x: auto; /* Permet un défilement horizontal pour les dates */
     background-color: #fefaf0;
@@ -162,7 +162,7 @@
                 var timeline = new vis.Timeline(document.getElementById('timeline'), items, options);
                 timeline.setGroups(groups);
 
-                timeline.setWindow(new Date(-2000, 0, 1), new Date(1750, 0, 1));
+                timeline.setWindow(new Date(-1500, 0, 1), new Date(1750, 0, 1));
             }
         });
     </script>
