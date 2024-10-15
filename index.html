@@ -92,7 +92,12 @@
                         endDateObj.setFullYear(endDate);
                     } else if (endDateObj && endDate < 100) {
                         endDateObj.setFullYear(endDate);
-                    }
+                    }let typeClass = {
+        'Dirigeant': 'type-dirigeant',
+        'Archi': 'type-archi'
+    }[row['Type']] || 'type-default';
+
+    let borderStyle = endDateObj ? 'none' : '2px solid #d1a684';
 
                     if (row['Type'] === 'Ere' && endDateObj) {
                         return {
