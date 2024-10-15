@@ -27,7 +27,6 @@
         .type-dirigeant,
         .type-default {
             background-color: #f4e1d2;
-            
             border-radius: 10px;
             padding: 0px;
             font-family: 'Cooper', sans-serif;
@@ -41,7 +40,6 @@
         }
         .type-archi {
             background-color: #f4b6b6;
-         
             border-radius: 10px;
             padding: 0px;
             font-family: 'Cooper', sans-serif;
@@ -92,12 +90,14 @@
                         endDateObj.setFullYear(endDate);
                     } else if (endDateObj && endDate < 100) {
                         endDateObj.setFullYear(endDate);
-                    }let typeClass = {
-        'Dirigeant': 'type-dirigeant',
-        'Archi': 'type-archi'
-    }[row['Type']] || 'type-default';
+                    }
 
-    let borderStyle = endDateObj ? 'none' : '2px solid #d1a684';
+                    let typeClass = {
+                        'Dirigeant': 'type-dirigeant',
+                        'Archi': 'type-archi'
+                    }[row['Type']] || 'type-default';
+
+                    let borderStyle = endDateObj ? 'none' : '2px solid #d1a684';
 
                     if (row['Type'] === 'Ere' && endDateObj) {
                         return {
@@ -106,14 +106,9 @@
                             start: date,
                             end: endDateObj,
                             type: 'background',
-                            style: `background-color: ${eraColors[index % eraColors.length]};``border: ${borderStyle};`
+                            style: `background-color: ${eraColors[index % eraColors.length]};`
                         };
                     } else {
-                        let typeClass = {
-                            'Dirigeant': 'type-dirigeant',
-                            'Archi': 'type-archi'
-                        }[row['Type']] || 'type-default';
-
                         return {
                             id: index + 1,
                             content: `${row['Headline']}`,
@@ -121,18 +116,17 @@
                             end: endDateObj,
                             group: row['Type'] || 'default',
                             className: typeClass,
-                            title: `${row['Text']} (${yearText})`
+                            title: `${row['Text']} (${yearText})`,
+                            style: `border: ${borderStyle};`
                         };
                     }
                 });
 
                 var groups = new vis.DataSet([
-{ id: 'Ere', content: 'Ere' },
-                    
+                    { id: 'Ere', content: 'Ere' },
                     { id: 'Archi', content: 'Archi' },
                     { id: 'default', content: 'Autre' },
-{ id: 'Dirigeant', content: 'Dirigeant' }
-                    
+                    { id: 'Dirigeant', content: 'Dirigeant' }
                 ]);
 
                 var options = {
@@ -164,7 +158,7 @@
                     items.forEach((item) => {
                         const element = document.querySelector(`[data-id='${item.id}']`);
                         if (element) {
-                            if (currentRange > 500 * 365 * 24 * 60 * 60 * 1000) { // 500 ans de zoom
+                            if (currentRange > 500 * 365 * 24 * 60 * 60 * 1000) {
                                 element.style.fontSize = '8px';
                                 element.style.display = 'none';
                             } else {
