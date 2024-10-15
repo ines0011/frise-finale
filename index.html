@@ -8,45 +8,29 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
         #timeline {
-    position: sticky;
-    width: 100%;
-    height: 840px;
-    overflow-y: hidden; /* Cache le défilement vertical */
-    overflow-x: auto; /* Permet un défilement horizontal pour les dates */
-    background-color: #fefaf0;
+            position: sticky;
+            width: 100%;
+            height: 840px;
+            overflow-y: hidden;
+            overflow-x: auto;
+            background-color: #fefaf0;
         }
         body {
             margin: 0;
             padding: 0;
             font-family: 'Cooper', Arial, sans-serif;
         }
+        .vis-time-axis .vis-grid.vis-vertical { border-color: transparent; }
+        .vis-labelset .vis-label { display: none; }
+        .vis-group, .vis-line { border: none; }
+        .vis-background { border-bottom: none; }
 
-        /* Suppression du quadrillage */
-        .vis-time-axis .vis-grid.vis-vertical {
-            border-color: transparent;
-        }
-
-        /* Suppression des étiquettes de groupes */
-        .vis-labelset .vis-label {
-            display: none;
-        }
-
-        /* Suppression des lignes de groupes */
-        .vis-group, .vis-line {
-            border: none;
-        }
-
-        .vis-background {
-            border-bottom: none;
-        }
-
-        /* Couleurs spécifiques par type */
         .type-dirigeant,
         .type-default {
             background-color: #f4e1d2;
             border: 2px solid #d1a684;
             border-radius: 10px;
-            padding: 0px 0px;
+            padding: 0px;
             font-family: 'Cooper', sans-serif;
             font-weight: bold;
             color: #3b2b1e;
@@ -54,13 +38,13 @@
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
             font-size: 10px;
-transition: font-size 0.3s ease; /* Transition pour lisser le changement de taille */
+            transition: font-size 0.3s ease;
         }
         .type-archi {
             background-color: #f4b6b6;
             border: 2px solid #d17373;
             border-radius: 10px;
-            padding: 0px 0px;
+            padding: 0px;
             font-family: 'Cooper', sans-serif;
             font-weight: bold;
             color: #3b1e1e;
@@ -68,7 +52,7 @@ transition: font-size 0.3s ease; /* Transition pour lisser le changement de tail
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
             font-size: 10px;
-transition: font-size 0.3s ease; /* Transition pour lisser le changement de taille */
+            transition: font-size 0.3s ease;
         }
     </style>
 </head>
@@ -80,11 +64,11 @@ transition: font-size 0.3s ease; /* Transition pour lisser le changement de tail
             header: true,
             complete: function(results) {
                 const eraColors = [
-                    'rgba(139, 69, 19, 0.3)',    // SaddleBrown
-                    'rgba(160, 82, 45, 0.3)',    // Sienna
-                    'rgba(205, 133, 63, 0.3)',   // Peru
-                    'rgba(222, 184, 135, 0.3)',  // BurlyWood
-                    'rgba(245, 222, 179, 0.3)'   // Wheat
+                    'rgba(139, 69, 19, 0.3)',
+                    'rgba(160, 82, 45, 0.3)',
+                    'rgba(205, 133, 63, 0.3)',
+                    'rgba(222, 184, 135, 0.3)',
+                    'rgba(245, 222, 179, 0.3)'
                 ];
 
                 var items = results.data.map((row, index) => {
@@ -93,10 +77,10 @@ transition: font-size 0.3s ease; /* Transition pour lisser le changement de tail
                     let date;
                     if (yearText.startsWith('-')) {
                         date = new Date(0, 0, 1);
-                        date.setFullYear(year);  // années négatives
+                        date.setFullYear(year);
                     } else if (year < 100) {
                         date = new Date(year, 0, 1);
-                        date.setFullYear(year); // pour éviter l'an 1900 par défaut
+                        date.setFullYear(year);
                     } else {
                         date = new Date(year, 0, 1);
                     }
@@ -128,12 +112,12 @@ transition: font-size 0.3s ease; /* Transition pour lisser le changement de tail
 
                         return {
                             id: index + 1,
-                            content: `${row['Headline']}`, // Affiche l'évènement
+                            content: `${row['Headline']}`,
                             start: date,
                             end: endDateObj,
                             group: row['Type'] || 'default',
                             className: typeClass,
-                            title: `${row['Text']} (${yearText})` // Affiche l'étiquette entière avec la date au survol
+                            title: `${row['Text']} (${yearText})`
                         };
                     }
                 });
@@ -158,20 +142,29 @@ transition: font-size 0.3s ease; /* Transition pour lisser le changement de tail
                     format: {
                         minorLabels: { year: 'YYYY' },
                         majorLabels: { year: '' }
-                    },
-    cluster: {
-        enabled: true, // Active le clustering
-        clusterCriteria: function(first, second) {
-            return (second.start - first.start) < (10 * 365 * 24 * 60 * 60 * 1000); // Grouper si proches (10 ans)
-        },
-        clusterByZoomLevel: true, // Adapte selon le niveau de zoom
-    }
+                    }
                 };
 
                 var timeline = new vis.Timeline(document.getElementById('timeline'), items, options);
                 timeline.setGroups(groups);
 
                 timeline.setWindow(new Date(-1500, 0, 1), new Date(1750, 0, 1));
+
+                // Ajout d'un écouteur pour ajuster la taille des étiquettes au zoom
+                timeline.on('rangechange', function (properties) {
+                    const currentRange = properties.end - properties.start;
+                    items.forEach((item) => {
+                        const element = document.querySelector(`[data-id='${item.id}']`);
+                        if (element) {
+                            if (currentRange > 500 * 365 * 24 * 60 * 60 * 1000) { // 500 ans de zoom
+                                element.style.fontSize = '8px';
+                                element.style.display = 'none';
+                            } else {
+                                element.style.fontSize = '10px';
+                                element.style.display = 'block';
+                            }
+                        }
+                    });
                 });
             }
         });
