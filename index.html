@@ -21,7 +21,7 @@
             font-family: 'Cooper', Arial, sans-serif;
         }
         
-        /* Bordures noires, fonds colorés et coins arrondis pour chaque type d'élément */
+        /* Bordures noires, fonds colorés et coins arrondis pour chaque type d'élément sans date de fin */
         .type-dirigeant {
             background-color: #f4e1d2;
             border: 2px solid black;
@@ -98,6 +98,9 @@
                         'Archi': 'type-archi'
                     }[row['Type']] || 'type-default';
 
+                    // Applique une bordure noire uniquement si l'événement n'a pas de date de fin
+                    let borderStyle = endDateObj ? 'none' : '2px solid black';
+
                     if (row['Type'] === 'Ere' && endDateObj) {
                         return {
                             id: index + 1,
@@ -105,7 +108,7 @@
                             start: date,
                             end: endDateObj,
                             type: 'background',
-                            style: `background-color: ${eraColors[index % eraColors.length]};`
+                            style: `background-color: ${eraColors[index % eraColors.length]}; border: none;` // Pas de bordure pour les périodes
                         };
                     } else {
                         return {
@@ -115,7 +118,8 @@
                             end: endDateObj,
                             group: row['Type'] || 'default',
                             className: typeClass,
-                            title: `${row['Text']} (${yearText})`
+                            title: `${row['Text']} (${yearText})`,
+                            style: `border: ${borderStyle};` // Appliquer le style de bordure en fonction de la présence de la date de fin
                         };
                     }
                 });
