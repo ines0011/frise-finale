@@ -11,7 +11,7 @@
             position: sticky;
             width: 100%;
             height: 840px;
-            overflow-y: auto; /* Permet le défilement si nécessaire */
+            overflow-y: auto;
             overflow-x: hidden;
             background-color: #fefaf0;
         }
@@ -33,9 +33,9 @@
             border-radius: 15px;
             color: #3b2b1e;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-            white-space: normal; /* Permet le retour à la ligne */
-            overflow: visible; /* Assure que le texte n'est pas coupé */
-            max-width: none; /* Empêche la limite de largeur */
+            white-space: normal;
+            overflow: visible;
+            max-width: none;
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
         }
         
@@ -53,6 +53,11 @@
         .type-default {
             background-color: #d2e4f4;
             border: 2px solid black;
+        }
+
+        /* Masquer la colonne de gauche avec les noms des groupes */
+        .vis-labelset {
+            display: none;
         }
 
         /* Supprimer le quadrillage vertical */
@@ -109,7 +114,6 @@
                             content: `${row['Headline']}`,
                             start: date,
                             end: endDateObj,
-                            group: row['Type'] || 'default',
                             className: typeClass,
                             title: `${row['Text']} (${yearText})`,
                             style: `border: ${borderStyle};`
@@ -117,17 +121,7 @@
                     }
                 });
 
-                var groups = new vis.DataSet([
-                    { id: 'Ere', content: 'Ere' },
-                    { id: 'Archi', content: 'Archi' },
-                    { id: 'default', content: 'Autre' },
-                    { id: 'Dirigeant', content: 'Dirigeant' }
-                ]);
-
                 var options = {
-                    groupOrder: function (a, b) {
-                        return a.id === 'Ere' ? 1 : -1;
-                    },
                     start: new Date(-15000, 0, 1),
                     end: new Date(3000, 0, 1),
                     zoomMin: 1000 * 60 * 60 * 24 * 365,
@@ -141,12 +135,11 @@
                         minorLabels: { year: 'YYYY' },
                         majorLabels: { year: '' }
                     },
-                    stack: true, /* Active le stacking pour afficher les éléments sur plusieurs lignes */
+                    stack: true,
                     horizontalScroll: true
                 };
 
                 var timeline = new vis.Timeline(document.getElementById('timeline'), items, options);
-                timeline.setGroups(groups);
                 timeline.setWindow(new Date(-1500, 0, 1), new Date(1750, 0, 1));
             }
         });
