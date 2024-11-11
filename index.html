@@ -71,107 +71,45 @@
                 ];
 
                 var items = results.data.map((row, index) => {
-                    let yearText = row['Year'].trim();
-                    let year = parseInt(yearText);
-                    let date;
-                    if (yearText.startsWith('-')) {
-                        date = new Date(0, 0, 1);
-                        date.setFullYear(year);
-                    } else if (year < 100) {
-                        date = new Date(year, 0, 1);
-                        date.setFullYear(year);
-                    } else {
-                        date = new Date(year, 0, 1);
-                    }
+    let yearText = row['Year'].trim();
+    let year = parseInt(yearText);
+    let date = new Date(year, 0, 1);
+    date.setFullYear(year); // Nécessaire pour les années avant 100
 
-                    let endDateText = row['End Year'] ? row['End Year'].trim() : null;
-                    let endDate = endDateText ? parseInt(endDateText) : null;
-                    let endDateObj = endDateText ? new Date(Math.abs(endDate), 0, 1) : null;
-                    if (endDateText && endDateText.startsWith('-')) {
-                        endDateObj = new Date(0, 0, 1);
-                        endDateObj.setFullYear(endDate);
-                    } else if (endDateObj && endDate < 100) {
-                        endDateObj.setFullYear(endDate);
-                    }
+    let endDateText = row['End Year'] ? row['End Year'].trim() : null;
+    let endDate = endDateText ? parseInt(endDateText) : null;
+    let endDateObj = endDateText ? new Date(endDate, 0, 1) : null;
+    if (endDateText) endDateObj.setFullYear(endDate);
 
-                    let typeClass = {
-                        'Dirigeant': 'type-dirigeant',
-                        'Archi': 'type-archi'
-                    }[row['Type']] || 'type-default';
+    let typeClass = {
+        'Dirigeant': 'type-dirigeant',
+        'Archi': 'type-archi'
+    }[row['Type']] || 'type-default';
 
-                    let borderStyle = endDateObj ? 'none' : (typeClass === 'type-dirigeant' ? '2px solid #d1a684' : '2px solid #d17373');
+    let borderStyle = endDateObj ? 'none' : (typeClass === 'type-dirigeant' ? '2px solid #d1a684' : '2px solid #d17373');
 
-                    if (row['Type'] === 'Ere' && endDateObj) {
-                        return {
-                            id: index + 1,
-                            content: `<div style="padding: 5px; color: black; font-weight: bold;">${row['Headline']}</div>`,
-                            start: date,
-                            end: endDateObj,
-                            type: 'background',
-                            style: `background-color: ${eraColors[index % eraColors.length]};`
-                        };
-                    } else {
-                        return {
-                            id: index + 1,
-                            content: `${row['Headline']}`,
-                            start: date,
-                            end: endDateObj,
-                            group: row['Type'] || 'default',
-                            className: typeClass,
-                            title: `${row['Text']} (${yearText})`,
-                            style: `border: ${borderStyle};`
-                        };
-                    }
-                });
-
-                var groups = new vis.DataSet([
-                    { id: 'Ere', content: 'Ere' },
-                    { id: 'Archi', content: 'Archi' },
-                    { id: 'default', content: 'Autre' },
-                    { id: 'Dirigeant', content: 'Dirigeant' }
-                ]);
-
-                var options = {
-                    groupOrder: function (a, b) {
-                        return a.id === 'Ere' ? 1 : -1;
-                    },
-                    start: new Date(-15000, 0, 1),
-                    end: new Date(3000, 0, 1),
-                    zoomMin: 1000 * 60 * 60 * 24 * 365,
-                    zoomMax: 1000 * 60 * 60 * 24 * 365 * 15000,
-                    width: '100%',
-                    height: '840px',
-                    margin: { item: 1, axis: 10 },
-                    verticalScroll: false,
-                    maxHeight: '100%',
-                    format: {
-                        minorLabels: { year: 'YYYY' },
-                        majorLabels: { year: '' }
-                    }
-                };
-
-                var timeline = new vis.Timeline(document.getElementById('timeline'), items, options);
-                timeline.setGroups(groups);
-
-                timeline.setWindow(new Date(-1500, 0, 1), new Date(1750, 0, 1));
-
-                timeline.on('rangechange', function (properties) {
-                    const currentRange = properties.end - properties.start;
-                    items.forEach((item) => {
-                        const element = document.querySelector(`[data-id='${item.id}']`);
-                        if (element) {
-                            if (currentRange > 500 * 365 * 24 * 60 * 60 * 1000) {
-                                element.style.fontSize = '8px';
-                                element.style.display = 'none';
-                            } else {
-                                element.style.fontSize = '10px';
-                                element.style.display = 'block';
-                            }
-                        }
-                    });
-                });
-            }
-        });
+    if (row['Type'] === 'Ere' && endDateObj) {
+        return {
+            id: index + 1,
+            content: `<div style="padding: 5px; color: black; font-weight: bold;">${row['Headline']}</div>`,
+            start: date,
+            end: endDateObj,
+            type: 'background',
+            style: `background-color: ${eraColors[index % eraColors.length]};`
+        };
+    } else {
+        return {
+            id: index + 1,
+            content: `${row['Headline']}`,
+            start: date,
+            end: endDateObj,
+            group: row['Type'] || 'default',
+            className: typeClass,
+            title: `${row['Text']} (${yearText})`,
+            style: `border: ${borderStyle};`
+        };
+    }
+});
     </script>
 </body>
 </html>
