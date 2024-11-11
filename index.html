@@ -11,8 +11,8 @@
             position: sticky;
             width: 100%;
             height: 840px;
-            overflow-y: hidden;
-            overflow-x: auto;
+            overflow-y: auto; /* Permet le défilement si nécessaire */
+            overflow-x: hidden;
             background-color: #fefaf0;
         }
         body {
@@ -141,11 +141,8 @@
                         minorLabels: { year: 'YYYY' },
                         majorLabels: { year: '' }
                     },
-                    /* Désactive le masquage du texte lors du zoom out */
-                    horizontalScroll: true,
-                    verticalScroll: true,
-                    minHeight: '100%',
-                    stack: false
+                    stack: true, /* Active le stacking pour afficher les éléments sur plusieurs lignes */
+                    horizontalScroll: true
                 };
 
                 var timeline = new vis.Timeline(document.getElementById('timeline'), items, options);
