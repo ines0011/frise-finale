@@ -21,26 +21,49 @@
             font-family: 'Cooper', Arial, sans-serif;
         }
         
-        /* Bordures noires pour chaque élément de la frise */
-        .type-dirigeant,
-        .type-default,
-        .type-archi {
+        /* Bordures noires et fonds colorés pour chaque type d'élément */
+        .type-dirigeant {
+            background-color: #f4e1d2;
             border: 2px solid black;
             border-radius: 10px;
             padding: 0px;
-            font-family: 'Cooper', sans-serif;
-            font-weight: bold;
             color: #3b2b1e;
             text-align: center;
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
             font-size: 10px;
-            transition: font-size 0.3s ease;
+            font-weight: bold;
+        }
+        
+        .type-archi {
+            background-color: #f4b6b6;
+            border: 2px solid black;
+            border-radius: 10px;
+            padding: 0px;
+            color: #3b1e1e;
+            text-align: center;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            font-size: 10px;
+            font-weight: bold;
         }
 
-        /* Couleur noire pour les lignes verticales de l'axe */
+        .type-default {
+            background-color: #d2e4f4;
+            border: 2px solid black;
+            border-radius: 10px;
+            padding: 0px;
+            color: #1e3b2b;
+            text-align: center;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        /* Supprimer le quadrillage vertical */
         .vis-time-axis .vis-grid.vis-vertical {
-            border-color: black;
+            border-color: transparent;
         }
     </style>
 </head>
