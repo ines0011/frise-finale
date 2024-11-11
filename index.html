@@ -25,36 +25,34 @@
         .type-dirigeant,
         .type-archi,
         .type-default {
-            border-radius: 15px; /* Coins arrondis */
             padding: 5px;
             font-family: 'Cooper', sans-serif;
             font-weight: bold;
             text-align: center;
             font-size: 10px;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-            overflow: visible; /* Assurer l'affichage complet du texte */
             white-space: normal; /* Permettre le retour à la ligne */
             min-width: 150px; /* Largeur minimale de chaque étiquette */
             max-width: 300px; /* Largeur maximale pour contrôler l'étalement */
+            pointer-events: none; /* Eviter les artefacts d'affichage */
+            border-top: none; /* Bordure uniquement sur le bas pour le trait */
+            border-right: none;
+            border-left: none;
+            border-bottom: 1px solid black;
         }
 
-        /* Couleurs de fond et bordures spécifiques aux catégories */
+        /* Couleurs de fond spécifiques aux catégories sans bordures */
         .type-dirigeant {
             background-color: #f4e1d2;
-            border: 2px solid black;
             color: #3b2b1e;
         }
         
         .type-archi {
             background-color: #f4b6b6;
-            border: 2px solid black;
             color: #3b1e1e;
         }
 
         .type-default {
             background-color: #d2e4f4;
-            border: 2px solid black;
             color: #1e3b2b;
         }
 
@@ -96,7 +94,7 @@
                     }[row['Type']] || 'type-default';
 
                     // Applique une bordure noire uniquement si l'événement n'a pas de date de fin
-                    let borderStyle = endDateObj ? 'none' : '2px solid black';
+                    let borderStyle = endDateObj ? 'none' : '1px solid black';
 
                     if (row['Type'] === 'Ere' && endDateObj) {
                         return {
@@ -116,7 +114,7 @@
                             group: row['Type'] || 'default',
                             className: typeClass,
                             title: `${row['Text']} (${yearText})`,
-                            style: `border: ${borderStyle};` // Appliquer le style de bordure en fonction de la présence de la date de fin
+                            style: `border-bottom: ${borderStyle};` // Appliquer uniquement une bordure inférieure
                         };
                     }
                 });
