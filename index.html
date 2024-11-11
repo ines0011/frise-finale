@@ -20,14 +20,12 @@
             padding: 0;
             font-family: 'Cooper', Arial, sans-serif;
         }
-        .vis-time-axis .vis-grid.vis-vertical { border-color: transparent; }
-        .vis-labelset .vis-label { display: none; }
-        .vis-group, .vis-line { border: none; }
-        .vis-background { border-bottom: none; }
+        
+        /* Bordures noires pour chaque élément de la frise */
         .type-dirigeant,
-        .type-default {
-            background-color: #f4e1d2;
-            border: 2px solid #d1a684;
+        .type-default,
+        .type-archi {
+            border: 2px solid black;
             border-radius: 10px;
             padding: 0px;
             font-family: 'Cooper', sans-serif;
@@ -39,19 +37,10 @@
             font-size: 10px;
             transition: font-size 0.3s ease;
         }
-        .type-archi {
-            background-color: #f4b6b6;
-            border: 2px solid #d17373;
-            border-radius: 10px;
-            padding: 0px;
-            font-family: 'Cooper', sans-serif;
-            font-weight: bold;
-            color: #3b1e1e;
-            text-align: center;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-            font-size: 10px;
-            transition: font-size 0.3s ease;
+
+        /* Couleur noire pour les lignes verticales de l'axe */
+        .vis-time-axis .vis-grid.vis-vertical {
+            border-color: black;
         }
     </style>
 </head>
@@ -86,8 +75,6 @@
                         'Archi': 'type-archi'
                     }[row['Type']] || 'type-default';
 
-                    let borderStyle = endDateObj ? 'none' : (typeClass === 'type-dirigeant' ? '2px solid #d1a684' : '2px solid #d17373');
-
                     if (row['Type'] === 'Ere' && endDateObj) {
                         return {
                             id: index + 1,
@@ -105,13 +92,11 @@
                             end: endDateObj,
                             group: row['Type'] || 'default',
                             className: typeClass,
-                            title: `${row['Text']} (${yearText})`,
-                            style: `border: ${borderStyle};`
+                            title: `${row['Text']} (${yearText})`
                         };
                     }
                 });
 
-                // Initialisation des groupes
                 var groups = new vis.DataSet([
                     { id: 'Ere', content: 'Ere' },
                     { id: 'Archi', content: 'Archi' },
@@ -119,7 +104,6 @@
                     { id: 'Dirigeant', content: 'Dirigeant' }
                 ]);
 
-                // Options de configuration pour la frise chronologique
                 var options = {
                     groupOrder: function (a, b) {
                         return a.id === 'Ere' ? 1 : -1;
@@ -139,11 +123,8 @@
                     }
                 };
 
-                // Création de la frise chronologique
                 var timeline = new vis.Timeline(document.getElementById('timeline'), items, options);
                 timeline.setGroups(groups);
-
-                // Fixation d'une fenêtre initiale pour l'affichage
                 timeline.setWindow(new Date(-1500, 0, 1), new Date(1750, 0, 1));
             }
         });
