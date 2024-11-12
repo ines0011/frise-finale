@@ -21,38 +21,38 @@
             font-family: 'Cooper', Arial, sans-serif;
         }
         
-        /* Bordures noires, fonds colorés, coins arrondis, texte complet visible */
+        /* Réduire les espacements et marges des étiquettes pour plus de visibilité */
         .type-dirigeant,
         .type-archi,
         .type-default {
-            padding: 5px;
+            padding: 3px; /* Réduction du padding pour maximiser l'espace */
             font-family: 'Cooper', sans-serif;
             font-weight: bold;
             text-align: center;
-            font-size: 10px;
-            border-radius: 15px;
+            font-size: 9px; /* Réduction de la taille de police */
+            border-radius: 8px; /* Coins arrondis plus discrets */
             color: #3b2b1e;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.2); /* Légère réduction de l'ombre */
             white-space: normal;
             overflow: visible;
             max-width: none;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1); /* Réduction de l'ombre pour alléger visuellement */
         }
         
         /* Couleurs de fond spécifiques pour chaque type */
         .type-dirigeant {
             background-color: #f4e1d2;
-            border: 2px solid black;
+            border: 1px solid black; /* Réduction de la bordure */
         }
         
         .type-archi {
             background-color: #f4b6b6;
-            border: 2px solid black;
+            border: 1px solid black; /* Réduction de la bordure */
         }
 
         .type-default {
             background-color: #d2e4f4;
-            border: 2px solid black;
+            border: 1px solid black; /* Réduction de la bordure */
         }
 
         /* Masquer la colonne de gauche avec les noms des groupes */
@@ -97,12 +97,12 @@
                         'Archi': 'type-archi'
                     }[row['Type']] || 'type-default';
 
-                    let borderStyle = endDateObj ? 'none' : '2px solid black';
+                    let borderStyle = endDateObj ? 'none' : '1px solid black';
 
                     if (row['Type'] === 'Ere' && endDateObj) {
                         return {
                             id: index + 1,
-                            content: `<div style="padding: 5px; color: black; font-weight: bold;">${row['Headline']}</div>`,
+                            content: `<div style="padding: 3px; color: black; font-weight: bold;">${row['Headline']}</div>`,
                             start: date,
                             end: endDateObj,
                             type: 'background',
@@ -139,7 +139,7 @@
                     zoomMax: 1000 * 60 * 60 * 24 * 365 * 15000,
                     width: '100%',
                     height: '840px',
-                    margin: { item: 1, axis: 10 },
+                    margin: { item: 5, axis: 5 }, /* Réduire les marges autour des items */
                     verticalScroll: false,
                     maxHeight: '100%',
                     format: {
