@@ -20,39 +20,45 @@
             padding: 0;
             font-family: 'Cooper', Arial, sans-serif;
         }
-        
-        /* Réduire les espacements et marges des étiquettes pour plus de visibilité */
+
+        /* Styles spécifiques par catégorie */
         .type-dirigeant,
         .type-archi,
-        .type-default {
-            padding: 3px; /* Réduction du padding pour maximiser l'espace */
+        .type-default,
+        .type-mouvement {
+            padding: 3px;
             font-family: 'Cooper', sans-serif;
             font-weight: bold;
             text-align: center;
-            font-size: 9px; /* Réduction de la taille de police */
-            border-radius: 8px; /* Coins arrondis plus discrets */
+            font-size: 9px;
+            border-radius: 8px;
             color: #3b2b1e;
-            text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.2); /* Légère réduction de l'ombre */
+            text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.2);
             white-space: normal;
             overflow: visible;
             max-width: none;
-            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1); /* Réduction de l'ombre pour alléger visuellement */
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
         }
-        
-        /* Couleurs de fond spécifiques pour chaque type */
+
         .type-dirigeant {
             background-color: #f4e1d2;
-            border: 1px solid black; /* Réduction de la bordure */
+            border: 1px solid black;
         }
-        
+
         .type-archi {
             background-color: #f4b6b6;
-            border: 1px solid black; /* Réduction de la bordure */
+            border: 1px solid black;
         }
 
         .type-default {
             background-color: #d2e4f4;
-            border: 1px solid black; /* Réduction de la bordure */
+            border: 1px solid black;
+        }
+
+        /* Style pour la catégorie Mouvement */
+        .type-mouvement {
+            background-color: #d2f4d2;
+            border: 1px solid black;
         }
 
         /* Masquer la colonne de gauche avec les noms des groupes */
@@ -94,7 +100,8 @@
 
                     let typeClass = {
                         'Dirigeant': 'type-dirigeant',
-                        'Archi': 'type-archi'
+                        'Archi': 'type-archi',
+                        'Mouvement': 'type-mouvement'
                     }[row['Type']] || 'type-default';
 
                     let borderStyle = endDateObj ? 'none' : '1px solid black';
@@ -125,6 +132,7 @@
                 var groups = new vis.DataSet([
                     { id: 'Ere', content: 'Ere' },
                     { id: 'Archi', content: 'Archi' },
+                    { id: 'Mouvement', content: 'Mouvement' },
                     { id: 'default', content: 'Autre' },
                     { id: 'Dirigeant', content: 'Dirigeant' }
                 ]);
@@ -139,7 +147,7 @@
                     zoomMax: 1000 * 60 * 60 * 24 * 365 * 15000,
                     width: '100%',
                     height: '840px',
-                    margin: { item: 5, axis: 5 }, /* Réduire les marges autour des items */
+                    margin: { item: 5, axis: 5 },
                     verticalScroll: false,
                     maxHeight: '100%',
                     format: {
